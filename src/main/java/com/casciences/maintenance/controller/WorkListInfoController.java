@@ -3,8 +3,10 @@ package com.casciences.maintenance.controller;
 import com.alibaba.fastjson.JSON;
 import com.casciences.maintenance.entity.WorkListInfo;
 import com.casciences.maintenance.entity.WorkerInfo;
+import com.casciences.maintenance.enums.QualityEnum;
 import com.casciences.maintenance.enums.WorkStateEnum;
 import com.casciences.maintenance.enums.WorkerStateEnum;
+import com.casciences.maintenance.enums.WorkerType;
 import com.casciences.maintenance.model.BackMessage;
 import com.casciences.maintenance.service.base.WorkListInfoService;
 import com.casciences.maintenance.service.base.WorkerInfoService;
@@ -112,12 +114,12 @@ public class WorkListInfoController {
     }
 
 
-    @RequestMapping(value = "confirmWorkList",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "confirmWorkList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "提交工单", notes = "提交工单")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "跳过的项目Id", name = "skipTaskIds", dataType = "list",paramType = "body"),
-            @ApiImplicitParam(value = "确认的项目Id", name = "confirmTaskIds", dataType = "list",paramType = "body"),
-            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int",paramType = "body")})
+            @ApiImplicitParam(value = "跳过的项目Id", name = "skipTaskIds", dataType = "list", paramType = "body"),
+            @ApiImplicitParam(value = "确认的项目Id", name = "confirmTaskIds", dataType = "list", paramType = "body"),
+            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int", paramType = "body")})
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
@@ -125,7 +127,7 @@ public class WorkListInfoController {
     @ResponseBody
     public String confirmWorkList(int work, List<Integer> confirmTaskIds, List<Integer> skipTaskIds) {
         try {
-            workListInfoService.confirmWorkListInfo(work,confirmTaskIds,skipTaskIds);
+            workListInfoService.confirmWorkListInfo(work, confirmTaskIds, skipTaskIds);
             return BackMessage.successMessage("成功");
         } catch (Exception e) {
             log.error("", e);
@@ -133,5 +135,35 @@ public class WorkListInfoController {
         }
     }
 
+
+    @RequestMapping(value = "ratingQuality", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "工单评分", notes = "工单评分")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "工单Id", name = "workListId", dataType = "list", paramType = "query"),
+            @ApiImplicitParam(value = "评分", name = "quality", dataType = "int", paramType = "query")})
+    @ApiResponses({
+            @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
+            @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
+    })
+    @ResponseBody
+    public String ratingQuality(int workListId, int quality) {
+        try {
+            workListInfoService.ratingQuality(workListId, quality);
+            return BackMessage.successMessage("成功");
+        } catch (Exception e) {
+            log.error("", e);
+            return BackMessage.errorMessage(e.getMessage());
+        }
+    }
+
+    @GetMapping("queryAllQuality")
+    @ApiOperation(value = "获取评分信息")
+    @ApiResponses({
+            @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
+            @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
+    })
+    public String queryAllQuality() {
+        return BackMessage.successMessage(QualityEnum.getDescMessage());
+    }
 
 }

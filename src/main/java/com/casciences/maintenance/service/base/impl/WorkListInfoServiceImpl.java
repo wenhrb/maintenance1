@@ -4,12 +4,14 @@ import com.casciences.maintenance.dao.WorkListInfoDao;
 import com.casciences.maintenance.entity.Matter;
 import com.casciences.maintenance.entity.TaskListInfo;
 import com.casciences.maintenance.entity.WorkListInfo;
+import com.casciences.maintenance.enums.QualityEnum;
 import com.casciences.maintenance.enums.WorkStateEnum;
 import com.casciences.maintenance.service.base.TaskListInfoService;
 import com.casciences.maintenance.service.base.WorkListInfoService;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -149,4 +151,18 @@ public class WorkListInfoServiceImpl implements WorkListInfoService {
         }
     }
 
+
+    @Override
+    public void ratingQuality(int workListId, int quality) throws Exception{
+        WorkListInfo workListInfo  = workListInfoDao.queryById(workListId);
+        if(workListInfo == null){
+            throw new Exception("工单不存在");
+        }
+        QualityEnum qualityEnum  = QualityEnum.getValue(quality);
+        if(qualityEnum ==null){
+            throw  new Exception("请做出正确评分,"+ StringUtils.arrayToCommaDelimitedString(QualityEnum.values()));
+        }
+        workListInfo.setWorkQuality(quality);
+        workListInfoDao.update(workListInfo);
+    }
 }

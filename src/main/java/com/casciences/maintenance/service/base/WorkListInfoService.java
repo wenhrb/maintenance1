@@ -58,6 +58,7 @@ public interface WorkListInfoService {
 
     /**
      * 创建工单
+     *
      * @param matters 需要维护事项
      * @return
      */
@@ -71,13 +72,22 @@ public interface WorkListInfoService {
      * @param states
      * @return
      */
-    List<WorkListInfo> queryByUserAndState(Integer workerId,List<Integer> states);
+    List<WorkListInfo> queryByUserAndState(Integer workerId, List<Integer> states);
 
     /**
      * 工单确认
+     *
      * @param work
      * @param confirmTaskIds
      * @param skipTaskIds
      */
-    void confirmWorkListInfo(int work,List<Integer> confirmTaskIds,List<Integer> skipTaskIds) throws Exception;
+    void confirmWorkListInfo(int work, List<Integer> confirmTaskIds, List<Integer> skipTaskIds) throws Exception;
+
+    /**
+     * 工单评分
+     *
+     * @param workListId
+     * @param score
+     */
+    void ratingQuality(int workListId, int score) throws Exception;
 }

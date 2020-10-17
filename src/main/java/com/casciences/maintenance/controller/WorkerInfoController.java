@@ -2,6 +2,7 @@ package com.casciences.maintenance.controller;
 
 import com.casciences.maintenance.entity.WorkerInfo;
 import com.casciences.maintenance.enums.WorkerStateEnum;
+import com.casciences.maintenance.enums.WorkerType;
 import com.casciences.maintenance.model.BackMessage;
 import com.casciences.maintenance.service.base.WorkerInfoService;
 import io.swagger.annotations.Api;
@@ -159,7 +160,17 @@ public class WorkerInfoController {
         } catch (Exception e) {
             return BackMessage.errorMessage(e.getMessage());
         }
-
     }
+
+    @GetMapping("queryAllWorkType")
+    @ApiOperation(value = "获取工种类型")
+    @ApiResponses({
+            @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
+            @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
+    })
+    public String queryAllWorkType() {
+        return BackMessage.successMessage(WorkerType.getDescMessage());
+    }
+
 
 }
