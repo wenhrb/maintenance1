@@ -6,6 +6,7 @@ import com.casciences.maintenance.excelFile.ExcelFile;
 import com.casciences.maintenance.excelFile.FileType;
 import com.casciences.maintenance.service.base.MatterService;
 import com.casciences.maintenance.service.file.FileDownLoadService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -34,6 +35,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/download")
+@Api(value = "ExcelDownController", tags = "文件下载")
 public class ExcelDownController {
     @Autowired
     private FileDownLoadService excelDowService;

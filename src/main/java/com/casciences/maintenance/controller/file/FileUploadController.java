@@ -9,6 +9,7 @@ import com.casciences.maintenance.service.file.impl.ExcelFileUploadService;
 import com.casciences.maintenance.util.BckMes;
 import com.casciences.maintenance.util.ExcelConfig;
 import com.google.common.base.Strings;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -18,7 +19,9 @@ import io.swagger.annotations.ApiResponses;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +35,7 @@ import java.util.Objects;
  */
 @Controller
 @RequestMapping("fileUpload")
+@Api(value = "FileUploadController", tags = "文件上传")
 public class FileUploadController {
 
     @Autowired
@@ -51,7 +55,7 @@ public class FileUploadController {
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
-    @RequestMapping("/fileToJson")
+    @RequestMapping(value = "/fileToJson",method = RequestMethod.POST,produces = "application/x-www-form-urlencoded")
     @ResponseBody
     public String changeFile(@ApiParam(value = "说明上传文档的type") @RequestParam String fileType,
                              @ApiParam(value = "要上传的文件") @RequestParam MultipartFile file,
@@ -76,7 +80,7 @@ public class FileUploadController {
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
-    @RequestMapping("/queryUploadFileType")
+    @GetMapping("/queryUploadFileType")
     @ResponseBody
     public String getUploadFileType() {
         return BackMessage.successMessage(ExcelConfig.getFileTypes());

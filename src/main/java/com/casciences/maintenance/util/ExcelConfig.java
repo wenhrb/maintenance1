@@ -34,6 +34,7 @@ public class ExcelConfig {
     static {
         try {
             localIp = InetAddress.getLocalHost().getHostAddress();
+            init();
         } catch (Exception e) {
             logger.error("初始化配置文件失败", e.getMessage());
         }
