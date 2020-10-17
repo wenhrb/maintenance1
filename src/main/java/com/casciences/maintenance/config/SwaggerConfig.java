@@ -16,7 +16,8 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
+                //避免使用swagger api的默认basic-error-controller
+                .paths(PathSelectors.regex("(?!/error.*).*"))
                 .build();
     }
 }
