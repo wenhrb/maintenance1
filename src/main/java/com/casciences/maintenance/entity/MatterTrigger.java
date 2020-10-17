@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * (Trigger)实体类
+ * (MatterTrigger)实体类
  *
  * @author makejava
  * @since 2020-09-13 22:06:04
@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Trigger implements Serializable {
+public class MatterTrigger implements Serializable {
     private static final long serialVersionUID = 762799638543713060L;
 
     private Integer triggerId;

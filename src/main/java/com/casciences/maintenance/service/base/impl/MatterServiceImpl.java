@@ -1,20 +1,34 @@
 package com.casciences.maintenance.service.base.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.casciences.maintenance.dao.MatterDao;
 import com.casciences.maintenance.entity.EquipInfo;
 import com.casciences.maintenance.entity.Matter;
+import com.casciences.maintenance.entity.MatterTrigger;
 import com.casciences.maintenance.enums.EquipType;
+import com.casciences.maintenance.excelFile.ExcelFile;
+import com.casciences.maintenance.excelFile.FileType;
 import com.casciences.maintenance.model.MatterExcel;
 import com.casciences.maintenance.service.base.EquipInfoService;
 import com.casciences.maintenance.service.base.MatterService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.casciences.maintenance.service.base.MatterTriggerService;
+import com.casciences.maintenance.service.file.FileDownLoadService;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import io.swagger.models.auth.In;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * (Matter)表服务实现类
@@ -30,6 +44,12 @@ public class MatterServiceImpl implements MatterService {
 
     @Resource
     private MatterDao matterDao;
+
+    @Resource
+    private MatterTriggerService matterTriggerService;
+
+    @Resource
+    private FileDownLoadService fileDownLoadService;
 
     /**
      * 通过ID查询单条数据
@@ -95,9 +115,9 @@ public class MatterServiceImpl implements MatterService {
 
     @Override
     public boolean deleteByIds(List<Integer> matterIds) throws Exception {
-       for(Integer matterId :matterIds){
-           matterDao.deleteById(matterId);
-       }
+        for (Integer matterId : matterIds) {
+            matterDao.deleteById(matterId);
+        }
         return true;
     }
 
@@ -135,6 +155,40 @@ public class MatterServiceImpl implements MatterService {
             matterDao.insert(matter);
         }
 
+    }
+
+    @Override
+    public ByteArrayOutputStream findAllMatterExcel(Matter matter) throws Exception {
+        List<Matter> matters = queryMatterByCondition(matter);
+        if (CollectionUtils.isEmpty(matters)) {
+            throw new Exception("没有找到数据");
+        }
+        List<EquipInfo> equipInfos = equipInfoService.queryAllByLimit(0, Integer.MAX_VALUE);
+        List<MatterTrigger> triggers = matterTriggerService.queryAllByLimit(0, Integer.MAX_VALUE);
+        Map<Integer, String> equipName = Maps.newHashMap(), partName = Maps.newHashMap(), triggerName = Maps.newHashMap();
+        if (!CollectionUtils.isEmpty(equipInfos)) {
+            equipName = equipInfos.stream().filter(m -> EquipType.EQUIP.getType().equals(m.getPartType())).collect(Collectors.toMap(EquipInfo::getEquipId, EquipInfo::getEquipName, (k1, k2) -> k1));
+            partName = equipInfos.stream().filter(m -> EquipType.PART.getType().equals(m.getPartType())).collect(Collectors.toMap(EquipInfo::getEquipId, EquipInfo::getPartName, (k1, k2) -> k1));
+        }
+        if (!CollectionUtils.isEmpty(triggers)) {
+            triggerName = triggers.stream().collect(Collectors.toMap(MatterTrigger::getTriggerId, MatterTrigger::getDescription, (k1, k2) -> k1));
+        }
+        List<MatterExcel> matterExcels = Lists.newArrayList();
+        for (Matter tempMatter : matters) {
+            MatterExcel matterExcel = new MatterExcel();
+            matterExcel.setEquipId(tempMatter.getEquipId());
+            matterExcel.setPart(partName.get(tempMatter.getPartId()));
+            matterExcel.setEquip(equipName.get(tempMatter.getEquipId()));
+            matterExcel.setMatterTrigger(triggerName.get(tempMatter.getMatterTriggerId()));
+            matterExcel.setPreOp(tempMatter.getPreOp());
+            matterExcel.setWorkerType(tempMatter.getWorkerType());
+            matterExcel.setState(tempMatter.getExecuStandard());
+            matterExcels.add(matterExcel);
+        }
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = JSON.parseArray(JSON.toJSONString(matterExcels));
+        jsonObject.put("datas", jsonArray);
+        return fileDownLoadService.exportFile(new ExcelFile(FileType.matter.getType()), jsonObject);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.casciences.maintenance.entity.Matter;
 import com.casciences.maintenance.entity.WorkerInfo;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 /**
@@ -70,6 +71,15 @@ public interface MatterService {
      * @param jsonArray
      */
     void saveDataToDd(JSONArray jsonArray);
+
+
+    /**
+     * 查询下载数据
+     *
+     * @param matter
+     */
+    ByteArrayOutputStream findAllMatterExcel(Matter matter) throws Exception;
+
 
     /**
      * 通过triggerId 查询所有的事件

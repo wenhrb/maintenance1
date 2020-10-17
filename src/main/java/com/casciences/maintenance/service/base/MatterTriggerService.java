@@ -1,17 +1,17 @@
 package com.casciences.maintenance.service.base;
 
-import com.casciences.maintenance.entity.Trigger;
+import com.casciences.maintenance.entity.MatterTrigger;
 import com.casciences.maintenance.enums.TriggerTypeEnums;
 
 import java.util.List;
 
 /**
- * (Trigger)表服务接口
+ * (MatterTrigger)表服务接口
  *
  * @author makejava
  * @since 2020-09-13 22:06:04
  */
-public interface TriggerService {
+public interface MatterTriggerService {
 
     /**
      * 通过ID查询单条数据
@@ -19,7 +19,7 @@ public interface TriggerService {
      * @param triggerId 主键
      * @return 实例对象
      */
-    Trigger queryById(Integer triggerId);
+    MatterTrigger queryById(Integer triggerId);
 
     /**
      * 查询多条数据
@@ -28,23 +28,23 @@ public interface TriggerService {
      * @param limit  查询条数
      * @return 对象列表
      */
-    List<Trigger> queryAllByLimit(int offset, int limit);
+    List<MatterTrigger> queryAllByLimit(int offset, int limit);
 
     /**
      * 新增数据
      *
-     * @param trigger 实例对象
+     * @param matterTrigger 实例对象
      * @return 实例对象
      */
-    Trigger insert(Trigger trigger);
+    MatterTrigger insert(MatterTrigger matterTrigger);
 
     /**
      * 修改数据
      *
-     * @param trigger 实例对象
+     * @param matterTrigger 实例对象
      * @return 实例对象
      */
-    Trigger update(Trigger trigger);
+    MatterTrigger update(MatterTrigger matterTrigger);
 
     /**
      * 通过主键删除数据
@@ -59,6 +59,6 @@ public interface TriggerService {
      * @param triggerType 触发条件
      * @return 触发条件
      */
-    List<Trigger> queryTimeTriggerByType(TriggerTypeEnums triggerType);
+    List<MatterTrigger> queryTimeTriggerByType(TriggerTypeEnums triggerType);
 
 }

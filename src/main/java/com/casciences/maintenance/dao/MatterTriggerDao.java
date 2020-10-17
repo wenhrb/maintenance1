@@ -1,17 +1,17 @@
 package com.casciences.maintenance.dao;
 
-import com.casciences.maintenance.entity.Trigger;
+import com.casciences.maintenance.entity.MatterTrigger;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
- * (Trigger)表数据库访问层
+ * (MatterTrigger)表数据库访问层
  *
  * @author makejava
  * @since 2020-09-13 22:06:04
  */
-public interface TriggerDao {
+public interface MatterTriggerDao {
 
     /**
      * 通过ID查询单条数据
@@ -19,7 +19,7 @@ public interface TriggerDao {
      * @param triggerId 主键
      * @return 实例对象
      */
-    Trigger queryById(Integer triggerId);
+    MatterTrigger queryById(Integer triggerId);
 
     /**
      * 查询指定行数据
@@ -28,32 +28,32 @@ public interface TriggerDao {
      * @param limit  查询条数
      * @return 对象列表
      */
-    List<Trigger> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
+    List<MatterTrigger> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
 
     /**
      * 通过实体作为筛选条件查询
      *
-     * @param trigger 实例对象
+     * @param matterTrigger 实例对象
      * @return 对象列表
      */
-    List<Trigger> queryAll(Trigger trigger);
+    List<MatterTrigger> queryAll(MatterTrigger matterTrigger);
 
     /**
      * 新增数据
      *
-     * @param trigger 实例对象
+     * @param matterTrigger 实例对象
      * @return 影响行数
      */
-    int insert(Trigger trigger);
+    int insert(MatterTrigger matterTrigger);
 
     /**
      * 修改数据
      *
-     * @param trigger 实例对象
+     * @param matterTrigger 实例对象
      * @return 影响行数
      */
-    int update(Trigger trigger);
+    int update(MatterTrigger matterTrigger);
 
     /**
      * 通过主键删除数据
@@ -67,7 +67,7 @@ public interface TriggerDao {
      *
      * @return
      */
-    List<Trigger> queryTimeTriggerByType(int type);
+    List<MatterTrigger> queryTimeTriggerByType(int type);
 
 
 }

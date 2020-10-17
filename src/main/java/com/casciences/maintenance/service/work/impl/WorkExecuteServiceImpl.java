@@ -2,12 +2,11 @@ package com.casciences.maintenance.service.work.impl;
 
 import com.casciences.maintenance.entity.EquipWorkInfo;
 import com.casciences.maintenance.entity.Matter;
-import com.casciences.maintenance.entity.Trigger;
-import com.casciences.maintenance.entity.WorkListInfo;
+import com.casciences.maintenance.entity.MatterTrigger;
 import com.casciences.maintenance.enums.TriggerTypeEnums;
 import com.casciences.maintenance.service.base.EquipWorkInfoService;
 import com.casciences.maintenance.service.base.MatterService;
-import com.casciences.maintenance.service.base.TriggerService;
+import com.casciences.maintenance.service.base.MatterTriggerService;
 import com.casciences.maintenance.service.base.WorkListInfoService;
 import com.casciences.maintenance.service.work.WorkExecuteService;
 import com.google.common.collect.Lists;
@@ -36,7 +35,7 @@ public class WorkExecuteServiceImpl implements WorkExecuteService {
     private EquipWorkInfoService equipWorkInfoService;
 
     @Resource
-    private TriggerService triggerService;
+    private MatterTriggerService matterTriggerService;
 
     @Resource
     private WorkListInfoService workListInfoService;
@@ -53,8 +52,8 @@ public class WorkExecuteServiceImpl implements WorkExecuteService {
         //四舍五入取整
         int startHours = Math.round((System.currentTimeMillis() - equipStartTime.getTime()) / ONE_HOUR_TIME);
         log.info("设备一共运行了{}小时了", startHours);
-        List<Trigger> triggers = triggerService.queryTimeTriggerByType(TriggerTypeEnums.TIME_SPAN);
-        List<Integer> triggerIds= triggers.stream().filter(m -> startHours % m.getTimeSpan() == 0).map(Trigger::getTriggerId).collect(Collectors.toList());
+        List<MatterTrigger> matterTriggers = matterTriggerService.queryTimeTriggerByType(TriggerTypeEnums.TIME_SPAN);
+        List<Integer> triggerIds= matterTriggers.stream().filter(m -> startHours % m.getTimeSpan() == 0).map(MatterTrigger::getTriggerId).collect(Collectors.toList());
 
        List<Matter> matters =  matterService.queryMatterByTrigger(triggerIds);
        return matters;

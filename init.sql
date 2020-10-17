@@ -83,30 +83,30 @@ CREATE TABLE `task_list_info`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Table structure for trigger
+-- Table structure for matterTrigger
 -- ----------------------------
-DROP TABLE IF EXISTS `trigger`;
-CREATE TABLE `trigger`  (
+DROP TABLE IF EXISTS `matterTrigger`;
+CREATE TABLE `matterTrigger`  (
   `trigger_id` int(20) NOT NULL AUTO_INCREMENT,
   `condition` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`trigger_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of trigger
+-- Records of matterTrigger
 -- ----------------------------
-INSERT INTO `trigger` VALUES (1, '开机前');
-INSERT INTO `trigger` VALUES (2, '每班');
-INSERT INTO `trigger` VALUES (3, '每天');
-INSERT INTO `trigger` VALUES (4, '每周');
-INSERT INTO `trigger` VALUES (5, '每月');
-INSERT INTO `trigger` VALUES (6, '每季度');
-INSERT INTO `trigger` VALUES (7, '每半年');
-INSERT INTO `trigger` VALUES (8, '每年');
-INSERT INTO `trigger` VALUES (9, '每300小时');
-INSERT INTO `trigger` VALUES (10, '带压进舱前');
-INSERT INTO `trigger` VALUES (11, '停机后');
-INSERT INTO `trigger` VALUES (12, '新项目开始前');
+INSERT INTO `matterTrigger` VALUES (1, '开机前');
+INSERT INTO `matterTrigger` VALUES (2, '每班');
+INSERT INTO `matterTrigger` VALUES (3, '每天');
+INSERT INTO `matterTrigger` VALUES (4, '每周');
+INSERT INTO `matterTrigger` VALUES (5, '每月');
+INSERT INTO `matterTrigger` VALUES (6, '每季度');
+INSERT INTO `matterTrigger` VALUES (7, '每半年');
+INSERT INTO `matterTrigger` VALUES (8, '每年');
+INSERT INTO `matterTrigger` VALUES (9, '每300小时');
+INSERT INTO `matterTrigger` VALUES (10, '带压进舱前');
+INSERT INTO `matterTrigger` VALUES (11, '停机后');
+INSERT INTO `matterTrigger` VALUES (12, '新项目开始前');
 
 -- ----------------------------
 -- Table structure for work_list_info
