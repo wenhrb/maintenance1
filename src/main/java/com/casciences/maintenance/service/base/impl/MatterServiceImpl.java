@@ -5,23 +5,28 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.casciences.maintenance.dao.MatterDao;
 import com.casciences.maintenance.entity.EquipInfo;
+import com.casciences.maintenance.entity.EquipMapping;
 import com.casciences.maintenance.entity.Matter;
 import com.casciences.maintenance.entity.MatterTrigger;
 import com.casciences.maintenance.enums.EquipType;
+import com.casciences.maintenance.enums.WorkerType;
 import com.casciences.maintenance.excelFile.ExcelFile;
 import com.casciences.maintenance.excelFile.FileType;
 import com.casciences.maintenance.model.MatterExcel;
 import com.casciences.maintenance.service.base.EquipInfoService;
+import com.casciences.maintenance.service.base.EquipMappingService;
 import com.casciences.maintenance.service.base.MatterService;
 import com.casciences.maintenance.service.base.MatterTriggerService;
 import com.casciences.maintenance.service.file.FileDownLoadService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sun.tools.javac.util.Assert;
 import io.swagger.models.auth.In;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
@@ -41,6 +46,11 @@ public class MatterServiceImpl implements MatterService {
 
     @Resource
     private EquipInfoService equipInfoService;
+
+
+    @Resource
+    private EquipMappingService equipMappingService;
+
 
     @Resource
     private MatterDao matterDao;
@@ -129,29 +139,40 @@ public class MatterServiceImpl implements MatterService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveDataToDd(JSONArray jsonArray) {
+    public void saveDataToDd(JSONArray jsonArray) throws Exception{
         Matter matter = new Matter();
         List<MatterExcel> matterExcels = jsonArray.toJavaList(MatterExcel.class);
         for (MatterExcel matterExcel : matterExcels) {
             String partStr = matterExcel.getPart();
             String equipStr = matterExcel.getEquip();
+            String state = matterExcel.getState();
+            Assert.check(StringUtils.isEmpty(equipStr),"对象名称为空");
+            Assert.check(StringUtils.isEmpty(partStr),"子对象名称为空");
+            Assert.check(StringUtils.isEmpty(state),"阈值为空");
 
-            EquipInfo part = equipInfoService.queryEquipOrPartByName(partStr, EquipType.PART);
-            if (part == null) {
-                part = equipInfoService.insert(new EquipInfo(partStr, Strings.EMPTY, EquipType.PART.getType(), Strings.EMPTY));
+            EquipInfo equipInfo = new EquipInfo();
+            equipInfo.setEquipName(equipStr);
+            equipInfo.setPartName(partStr);
+            equipInfo.setState(state);
+            equipInfo.setPartType(EquipType.PART.getType());
+            WorkerType workerType  =WorkerType.NORMAL;
+            if(equipStr.contains("电")){
+                workerType =WorkerType.ELECTRICITY;
             }
-            EquipInfo equip = equipInfoService.queryEquipOrPartByName(equipStr, EquipType.EQUIP);
-            if (equip == null) {
-                equip = new EquipInfo(equipStr, Strings.EMPTY, EquipType.EQUIP.getType(), Strings.EMPTY);
-                equip.setWorkerType(matterExcel.getWorkerType());
-                equip = equipInfoService.insert(new EquipInfo(equipStr, Strings.EMPTY, EquipType.EQUIP.getType(), Strings.EMPTY));
+            equipInfo.setWorkerType(workerType.getValue());
+            List<EquipInfo>  parts = equipInfoService.queryByEquipInfo(equipInfo);
+            if (CollectionUtils.isEmpty(parts)) {
+                equipInfoService.insert(equipInfo);
             }
-            matter.setEquipId(equip.getEquipId());
-            matter.setPartId(part.getEquipId());
+
+            matter.setEquipId(equipInfo.getEquipId());
+            //todo 需要确定 要不要把对象和子对象放到一个表中
+            matter.setPartId(0);
             matter.setExecuStandard(matterExcel.getState());
             matter.setPreOp(matterExcel.getPreOp());
+            //todo 需要确定 上传的文件要不要放入trigger
             matter.setMatterTriggerId(0);
-            matter.setWorkerType(equip.getWorkerType());
+            matter.setWorkerType(workerType.getValue());
             matterDao.insert(matter);
         }
 

@@ -22,6 +22,20 @@ public interface EquipInfoDao {
     EquipInfo queryById(Integer equipId);
 
     /**
+     *
+     * @param equipInfo
+     * @return
+     */
+    List<EquipInfo> queryByEquipInfo(EquipInfo equipInfo);
+
+    /**
+     *
+     * @param equipIds
+     * @return
+     */
+    List<EquipInfo> queryPartInfoByEquipIds(List<Integer> equipIds);
+
+    /**
      * 查询指定行数据
      *
      * @param offset 查询起始位置
@@ -78,4 +92,13 @@ public interface EquipInfoDao {
      * @return 数据库中存在的数据
      */
     List<EquipInfo> queryPartByName(String partName);
+
+    /**
+     * 新增数据
+     *
+     * @param equipInfos 实例对象
+     * @return 影响行数
+     */
+    int batchInsert(List<EquipInfo> equipInfos);
+
 }

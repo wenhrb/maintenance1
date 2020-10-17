@@ -54,6 +54,36 @@
         </where>
     </select>
 
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryByEquipInfo" resultMap="EquipInfoMap"  parameterType="list">
+        select
+        equip_id, equip_name, part_name, part_type, state,worker_type
+        from equip_info
+        <where>
+            <if test="equipIds != null">
+                    and equip_id in
+                    <foreach item="equipId" index="index" collection="equipIds"
+                             open="(" separator="," close=")"> #{equipId}
+                    </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryPartInfoByEquipIds" resultMap="EquipInfoMap"  parameterType="list">
+        select
+        equip_id, equip_name, part_name, part_type, state,worker_type
+        from equip_info
+        <where>
+            <if test="equipIds != null">
+                and equip_id in
+                <foreach item="equipId" index="index" collection="equipIds"
+                         open="(" separator="," close=")"> #{equipId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryEquipByName" resultMap="EquipInfoMap">
@@ -89,6 +119,14 @@
     <insert id="insert" keyProperty="equipId" useGeneratedKeys="true">
         insert into equip_info(equip_name, part_name, part_type, state, worker_type)
         values (#{equipName}, #{partName}, #{partType}, #{state}, #{workerType})
+    </insert>
+
+    <insert id="batchInsert" keyProperty="equipId" useGeneratedKeys="true">
+        insert into equip_info(equip_name, part_name, part_type, state, worker_type)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{equipName}, #{partName}, #{partType}, #{state}, #{workerType})
+        </foreach>
     </insert>
 
     <!--通过主键修改数据-->

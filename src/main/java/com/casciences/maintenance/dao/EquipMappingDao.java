@@ -30,6 +30,12 @@ public interface EquipMappingDao {
      */
     List<EquipMapping> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
+    /**
+     * 查找对象
+     * @param equipId
+     * @return
+     */
+    List<EquipMapping> queryMappingInfo(@Param("equipId")int equipId);
 
     /**
      * 通过实体作为筛选条件查询

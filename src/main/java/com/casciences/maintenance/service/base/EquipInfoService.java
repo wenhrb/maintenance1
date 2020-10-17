@@ -20,7 +20,20 @@ public interface EquipInfoService {
      * @return 实例对象
      */
     EquipInfo queryById(Integer equipId);
+    /**
+     * 通过条件查询单条数据
+     *
+     * @param equipInfo 主键
+     * @return 实例对象
+     */
+    List<EquipInfo> queryByEquipInfo(EquipInfo equipInfo);
 
+    /**
+     *
+     * @param equipId
+     * @return
+     */
+    List<EquipInfo> queryPartInfoByEquipId(int equipId) throws Exception;
     /**
      * 查询多条数据
      *
@@ -36,7 +49,7 @@ public interface EquipInfoService {
      * @param equipInfo 实例对象
      * @return 实例对象
      */
-    EquipInfo insert(EquipInfo equipInfo);
+    EquipInfo insert(EquipInfo equipInfo) throws Exception;
 
     /**
      * 修改数据

@@ -24,6 +24,14 @@
         limit #{offset}, #{limit}
     </select>
 
+    <!--查询指定行数据-->
+    <select id="queryMappingInfo" resultMap="EquipMappingMap">
+        select
+          equip_mapping_id, equip_id, part_id
+        from equip_mapping
+        where equip_id = #{equipId}
+    </select>
+
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="EquipMappingMap">
         select

@@ -70,7 +70,7 @@ public interface MatterService {
      *
      * @param jsonArray
      */
-    void saveDataToDd(JSONArray jsonArray);
+    void saveDataToDd(JSONArray jsonArray) throws Exception;
 
 
     /**

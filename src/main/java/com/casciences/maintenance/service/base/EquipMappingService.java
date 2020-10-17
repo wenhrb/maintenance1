@@ -30,6 +30,13 @@ public interface EquipMappingService {
     List<EquipMapping> queryAllByLimit(int offset, int limit);
 
     /**
+     *
+     * @param equipId
+     * @return
+     */
+    List<EquipMapping> queryMappingInfo(int equipId);
+
+    /**
      * 新增数据
      *
      * @param equipMapping 实例对象
