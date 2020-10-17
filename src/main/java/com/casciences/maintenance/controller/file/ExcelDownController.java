@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping("/download")
-public class ExcelDowController {
+public class ExcelDownController {
     @Autowired
     private FileDownLoadService excelDowService;
 

@@ -1,8 +1,14 @@
 package com.casciences.maintenance.excelFile;
 
+import com.casciences.maintenance.enums.WorkerType;
+import com.casciences.maintenance.util.ExcelConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author lijie7
@@ -29,5 +35,16 @@ public enum FileType {
      */
     private String desc;
 
-
+    /**
+     * 获取说明
+     *
+     * @return
+     */
+    public static Map<Integer, String> getDescMessage() {
+        Map<Integer, String> map = new HashMap<>();
+        for (WorkerType value : WorkerType.values()) {
+            map.put(value.getValue(), value.getDesce());
+        }
+        return map;
+    }
 }

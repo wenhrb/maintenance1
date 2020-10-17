@@ -57,6 +57,11 @@ public class WorkListInfo implements Serializable {
      */
     private Integer workerType;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
     public WorkListInfo() {
         this.workOrderTime = new Date();
         this.workStatus = 0;

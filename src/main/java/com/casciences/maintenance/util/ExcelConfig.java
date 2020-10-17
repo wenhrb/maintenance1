@@ -1,11 +1,14 @@
 package com.casciences.maintenance.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -90,6 +93,13 @@ public class ExcelConfig {
 
     public Properties getAll() {
         return properties;
+    }
+
+    public static JSONArray getFileTypes() {
+        String fileTypeStr = (String) properties.get("fileType");
+        JSONArray jsonArray = JSONArray.parseArray(fileTypeStr);
+        return jsonArray;
+
     }
 
     public String get(String key) {

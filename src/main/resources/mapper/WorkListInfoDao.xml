@@ -11,12 +11,14 @@
         <result property="workUpdateTime" column="work_update_time" jdbcType="TIMESTAMP"/>
         <result property="workHours" column="work_hours" jdbcType="INTEGER"/>
         <result property="workQuality" column="work_quality" jdbcType="INTEGER"/>
+        <result property="workerType" column="worker_type" jdbcType="INTEGER"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="WorkListInfoMap">
         select
-          work_id, work_order_time, work_start_time, worker, work_status, work_update_time, work_hours, work_quality
+          work_id, work_order_time, work_start_time, worker, work_status, work_update_time, work_hours, work_quality, worker_type, remark
         from work_list_info
         where work_id = #{workId}
     </select>
@@ -24,7 +26,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="WorkListInfoMap">
         select
-          work_id, work_order_time, work_start_time, worker, work_status, work_update_time, work_hours, work_quality
+          work_id, work_order_time, work_start_time, worker, work_status, work_update_time, work_hours, work_quality, worker_type, remark
         from work_list_info
         limit #{offset}, #{limit}
     </select>
@@ -32,7 +34,8 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="WorkListInfoMap">
         select
-        work_id, work_order_time, work_start_time, worker, work_status, work_update_time, work_hours, work_quality
+        work_id, work_order_time, work_start_time, worker, work_status, work_update_time, work_hours, work_quality,
+        worker_type, remark
         from work_list_info
         <where>
             <if test="workId != null">
@@ -59,8 +62,15 @@
             <if test="workQuality != null">
                 and work_quality = #{workQuality}
             </if>
+            <if test="workerType != null">
+                and worker_type = #{workerType}
+            </if>
+            <if test="remark != null and remark != ''">
+                and remark = #{remark}
+            </if>
         </where>
     </select>
+
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryByUserAndState" resultMap="WorkListInfoMap" parameterType="list">
@@ -80,11 +90,37 @@
         </where>
     </select>
 
-
     <!--新增所有列-->
     <insert id="insert" keyProperty="workId" useGeneratedKeys="true">
-        insert into work_list_info(work_order_time, work_start_time, worker, work_status, work_update_time, work_hours, work_quality)
-        values (#{workOrderTime}, #{workStartTime}, #{worker}, #{workStatus}, #{workUpdateTime}, #{workHours}, #{workQuality})
+        insert into work_list_info(work_order_time, work_start_time, worker, work_status, work_update_time, work_hours, work_quality, worker_type, remark)
+        values (#{workOrderTime}, #{workStartTime}, #{worker}, #{workStatus}, #{workUpdateTime}, #{workHours}, #{workQuality}, #{workerType}, #{remark})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="workId" useGeneratedKeys="true">
+        insert into work_list_info(work_order_time, work_start_time, worker, work_status, work_update_time,
+        work_hours, work_quality, worker_type, remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.workOrderTime}, #{entity.workStartTime}, #{entity.worker}, #{entity.workStatus},
+            #{entity.workUpdateTime}, #{entity.workHours}, #{entity.workQuality}, #{entity.workerType},
+            #{entity.remark})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="workId" useGeneratedKeys="true">
+        insert into work_list_info(work_order_time, work_start_time, worker, work_status, work_update_time,
+        work_hours, work_quality, worker_type, remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.workOrderTime}, #{entity.workStartTime}, #{entity.worker}, #{entity.workStatus},
+            #{entity.workUpdateTime}, #{entity.workHours}, #{entity.workQuality}, #{entity.workerType},
+            #{entity.remark})
+        </foreach>
+        on duplicate key update
+        work_order_time = values(work_order_time) , work_start_time = values(work_start_time) , worker = values(worker)
+        , work_status = values(work_status) , work_update_time = values(work_update_time) , work_hours =
+        values(work_hours) , work_quality = values(work_quality) , worker_type = values(worker_type) , remark =
+        values(remark)
     </insert>
 
     <!--通过主键修改数据-->
@@ -111,6 +147,12 @@
             </if>
             <if test="workQuality != null">
                 work_quality = #{workQuality},
+            </if>
+            <if test="workerType != null">
+                worker_type = #{workerType},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
             </if>
         </set>
         where work_id = #{workId}
