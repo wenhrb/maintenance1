@@ -71,4 +71,11 @@ public interface WorkerInfoService {
      * @return 是否成功
      */
 //    boolean deleteByIds(List<Integer> workerIds) throws Exception;
+
+    /**
+     * 通过条件查询员工信息
+     * @param workerInfo
+     * @return
+     */
+    List<WorkerInfo> queryWorkersByCondition(WorkerInfo workerInfo)  throws Exception;
 }

@@ -17,21 +17,5 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("equipMapping")
 public class EquipMappingController {
-    /**
-     * 服务对象
-     */
-    @Resource
-    private EquipMappingService equipMappingService;
-
-    /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
-    @GetMapping("selectOne")
-    public EquipMapping selectOne(Integer id) {
-        return this.equipMappingService.queryById(id);
-    }
 
 }

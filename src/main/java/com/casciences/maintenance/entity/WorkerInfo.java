@@ -23,30 +23,31 @@ public class WorkerInfo implements Serializable {
     /**
      * 工人Id
      */
-    @ApiModelProperty
+    @ApiModelProperty(value = "工人Id")
     private Integer workerId;
     /**
      * 工人名字
      */
-    @ApiModelProperty
+    @ApiModelProperty(value = "工人名字")
     private String workerName;
     /**
      * 工种类型（1：维修工，2：电工）
      */
-    @ApiModelProperty
+    @ApiModelProperty(value = "工人类型", allowableValues = "0,1,2")
     private Integer workerType;
     /**
      * 工作时长（小时）
      */
+    @ApiModelProperty(value = "工作时长（小时）")
     private Integer hours;
     /**
      * 工作状态（0：待工，1：在工，2：请假 ）
      */
-    @ApiModelProperty
+    @ApiModelProperty(value = "工人类型（0：待工，1：在工，2：请假 ）", allowableValues = "0,1,2")
     private Integer workerState;
     /**
      * 备注
      */
-    @ApiModelProperty
+    @ApiModelProperty(value = "备注")
     private String remark;
 }

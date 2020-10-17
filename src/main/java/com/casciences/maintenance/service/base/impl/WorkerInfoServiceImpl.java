@@ -3,10 +3,13 @@ package com.casciences.maintenance.service.base.impl;
 import com.casciences.maintenance.dao.WorkerInfoDao;
 import com.casciences.maintenance.entity.WorkerInfo;
 import com.casciences.maintenance.service.base.WorkerInfoService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import sun.jvm.hotspot.utilities.Assert;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * (WorkerInfo)表服务实现类
@@ -27,7 +30,7 @@ public class WorkerInfoServiceImpl implements WorkerInfoService {
      */
     @Override
     public WorkerInfo queryById(Integer workerId) {
-        return this.workerInfoDao.queryById(workerId);
+        return workerInfoDao.queryById(workerId);
     }
 
     /**
@@ -39,7 +42,7 @@ public class WorkerInfoServiceImpl implements WorkerInfoService {
      */
     @Override
     public List<WorkerInfo> queryAllByLimit(int offset, int limit) {
-        return this.workerInfoDao.queryAllByLimit(offset, limit);
+        return workerInfoDao.queryAllByLimit(offset, limit);
     }
 
     /**
@@ -50,7 +53,7 @@ public class WorkerInfoServiceImpl implements WorkerInfoService {
      */
     @Override
     public WorkerInfo insert(WorkerInfo workerInfo) {
-        this.workerInfoDao.insert(workerInfo);
+        workerInfoDao.insert(workerInfo);
         return workerInfo;
     }
 
@@ -61,12 +64,12 @@ public class WorkerInfoServiceImpl implements WorkerInfoService {
      * @return 实例对象
      */
     @Override
-    public WorkerInfo update(WorkerInfo workerInfo) throws Exception{
-        if(null == workerInfoDao.queryById(workerInfo.getWorkerId()) ){
+    public WorkerInfo update(WorkerInfo workerInfo) throws Exception {
+        if (null == workerInfoDao.queryById(workerInfo.getWorkerId())) {
             throw new Exception("员工不存在");
         }
-        this.workerInfoDao.update(workerInfo);
-        return this.queryById(workerInfo.getWorkerId());
+        workerInfoDao.update(workerInfo);
+        return queryById(workerInfo.getWorkerId());
     }
 
     /**
@@ -77,6 +80,14 @@ public class WorkerInfoServiceImpl implements WorkerInfoService {
      */
     @Override
     public boolean deleteById(Integer workerId) {
-        return this.workerInfoDao.deleteById(workerId) > 0;
+        return workerInfoDao.deleteById(workerId) > 0;
+    }
+
+    @Override
+    public List<WorkerInfo> queryWorkersByCondition(WorkerInfo workerInfo) throws Exception {
+        if (workerInfo == null) {
+            throw new Exception("条件不正确");
+        }
+        return workerInfoDao.queryAll(workerInfo);
     }
 }

@@ -8,8 +8,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Example;
+import io.swagger.annotations.ExampleProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -83,9 +86,7 @@ public class WorkerInfoController {
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
-    @ApiImplicitParam(value = "工人信息", name = "workerInfo", dataType = "WorkerInfo<<ArrayList>>", paramType = "body",
-            example = "{\"workerName\":\"test1\",\"workerType\":1,\"workerState\":1,\"remark\":\"wqwre\"}")
-
+    @ApiParam(value = "工人信息", name = "workerInfo", defaultValue = "{\"workerName\":\"test1\",\"workerType\":1,\"workerState\":1,\"remark\":\"wqwre\"}")
     @RequestMapping(value = "add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 
     public String addWorker(@RequestBody WorkerInfo workerInfo) {
@@ -100,8 +101,7 @@ public class WorkerInfoController {
 
 
     @ApiOperation(value = "删除一个工人", notes = "删除一个工人")
-    @ApiImplicitParams({
-            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int", paramType = "query")})
+    @ApiParam(value = "员工Id", name = "workerId")
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
@@ -119,8 +119,8 @@ public class WorkerInfoController {
 
 
     @ApiOperation(value = "修改一个工人", notes = "修改一个工人")
-    @ApiImplicitParam(value = "工人信息", name = "workerInfo", dataType = "WorkerInfo<<ArrayList>>", paramType = "body",
-            example = "{\"workerId\":\"1\",\"workerName\":\"test1\",\"workerType\":1,\"workerState\":1,\"remark\":\"wqwre\"}")
+    @ApiParam(value = "工人信息", name = "workerInfo",
+            defaultValue = "{\"workerId\":\"1\",\"workerName\":\"test1\",\"workerType\":1,\"workerState\":1,\"remark\":\"wqwre\"}")
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
@@ -140,24 +140,21 @@ public class WorkerInfoController {
     /**
      * 分页查询员工信息
      *
-     * @param pageSize 每页展示的条数
-     * @param pageNum  页数
+     * @param workerInfo 每页展示的条数
      * @return 单条数据
      */
     @GetMapping("queryWorkers")
     @ResponseBody
-    @ApiOperation(value = "分页查询员工信息", notes = "分页查询员工信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(value = "每页展示的条数", name = "pageSize", dataType = "int",defaultValue = "10"),
-            @ApiImplicitParam(value = "页数", name = "pageNum", dataType = "int",defaultValue = "1")})
+    @ApiOperation(value = "根据条件查询员工信息", notes = "传入对象")
+    @ApiParam(name = "workerInfo", value = "{\"workerName\":\"test1\",\"workerType\":1,\"workerState\":1}", required = true)
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
-    public String queryMatters(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public String queryMatters(@RequestBody WorkerInfo workerInfo) {
         try {
-            int offset = pageNum >= 1 ? (pageNum - 1) * pageSize : 0;
-            List<WorkerInfo> workerInfos = workerInfoService.queryAllByLimit(offset, pageSize);
+
+            List<WorkerInfo> workerInfos = workerInfoService.queryWorkersByCondition(workerInfo);
             return BackMessage.successMessage(workerInfos);
         } catch (Exception e) {
             return BackMessage.errorMessage(e.getMessage());
