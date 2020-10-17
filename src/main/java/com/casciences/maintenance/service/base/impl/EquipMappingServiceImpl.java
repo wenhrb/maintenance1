@@ -42,6 +42,12 @@ public class EquipMappingServiceImpl implements EquipMappingService {
         return this.equipMappingDao.queryAllByLimit(offset, limit);
     }
 
+    @Override
+    public List<EquipMapping> queryMappingInfo(int equipId) {
+        //todo 查找子对象
+        return null;
+    }
+
     /**
      * 新增数据
      *
