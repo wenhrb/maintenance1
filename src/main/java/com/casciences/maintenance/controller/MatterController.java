@@ -1,15 +1,11 @@
 package com.casciences.maintenance.controller;
 
 import com.casciences.maintenance.entity.Matter;
+import com.casciences.maintenance.entity.WorkerInfo;
 import com.casciences.maintenance.model.BackMessage;
 import com.casciences.maintenance.service.base.MatterService;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,51 +37,47 @@ public class MatterController {
     /**
      * 通过主键查询单条数据
      *
-     * @param pageSize 每页展示的条数
-     * @param pageNum  页数
-     * @return 单条数据
-     */
-    @GetMapping("queryMatters")
-    @ResponseBody
-    @ApiOperation(value = "分页查询matter信息value", notes = "分页查询matter信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(value = "每页展示的条数", name = "pageSize", dataType = "int"),
-            @ApiImplicitParam(value = "页数", name = "pageNum", dataType = "int")})
-    @ApiResponses({
-            @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
-            @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
-    })
-    public String queryMatters(@RequestParam int pageNum, @RequestParam int pageSize) {
-        try {
-            int offset = pageNum >= 1 ? (pageNum - 1) * pageSize : 0;
-            List<Matter> matterList = matterService.queryAllByLimit(offset, pageSize);
-            return BackMessage.successMessage(matterList);
-        } catch (Exception e) {
-            return BackMessage.errorMessage(e.getMessage());
-        }
-
-    }
-
-
-    /**
-     * 通过主键查询单条数据
-     *
      * @param triggerId 每页展示的条数
      * @return 单条数据
      */
-    @ApiOperation(value = "单条查询事件", notes = "单条查询事件")
-    @ApiImplicitParam(value = "事件信息", name = "matter", dataType = "Matter<<ArrayList>>", paramType = "body",
-            example = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}")
+    @ApiOperation(value = "查询一个事件", notes = "查询一个事件")
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
+    @ApiParam(value = "事件信息", name = "matter", defaultValue = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}")
+
 
     @GetMapping("queryMattersByTrigger")
     @ResponseBody
     public String queryMattersByTriggerIds(@RequestParam int triggerId) {
         List<Matter> matterList = matterService.queryMatterByTrigger(Lists.newArrayList(triggerId));
         return BackMessage.successMessage(matterList);
+    }
+
+    /**
+     * 根据条件查询员工信息
+     *
+     * @param matter 每页展示的条数
+     * @return 单条数据
+     */
+    @RequestMapping(value = "queryMatters", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    @ApiOperation(value = "根据条件查询事件信息", notes = "传入对象")
+    @ApiParam(name = "matterInfo", value = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}", required = true)
+    @ApiResponses({
+            @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
+            @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
+    })
+    public String queryMatters(@RequestBody Matter matter) {
+        try {
+
+            List<Matter> matters = matterService.queryMatterByCondition(matter);
+            return BackMessage.successMessage(matters);
+        } catch (Exception e) {
+            return BackMessage.errorMessage(e.getMessage());
+        }
+
     }
 
 
@@ -95,13 +87,15 @@ public class MatterController {
      * @param matter
      * @return
      */
-    @ApiOperation(value = "增加一个事件", notes = "增加一个事件")
-    @ApiImplicitParam(value = "事件信息", name = "matter", dataType = "Matter<<ArrayList>>", paramType = "body",
-            example = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}")
+
+    @ApiOperation(value = "新增一个事件", notes = "新增一个事件")
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
+    @ApiParam(value = "事件信息", name = "matter", defaultValue = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}")
+
+
     @RequestMapping(value = "addMatters", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String addMatters(@RequestBody Matter matter) {
@@ -116,12 +110,12 @@ public class MatterController {
      * @return
      */
     @ApiOperation(value = "删除一个事件", notes = "删除一个事件")
-    @ApiImplicitParam(value = "事件信息", name = "matter", dataType = "Matter<<ArrayList>>", paramType = "body",
-            example = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}")
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
+    @ApiParam(value = "事件信息", name = "matter", defaultValue = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}")
+
     @RequestMapping(value = "deleteMatters", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String deleteMatters(@RequestBody List<Integer> matterIds) {
@@ -146,12 +140,12 @@ public class MatterController {
      * @return
      */
     @ApiOperation(value = "更改一个事件", notes = "更改一个事件")
-    @ApiImplicitParam(value = "事件信息", name = "matter", dataType = "Matter<<ArrayList>>", paramType = "body",
-            example = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}")
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
+    @ApiParam(value = "事件信息", name = "matter", defaultValue = "{\"matterId\":\"1\",\"equipId\":\"1\",\"part_id\":\"1\",\"pre_op\":\"检查\",\"execu_standard\":\"破损\",\"maint_op\":\"维修\",\"matter_trigger_id\":\"1\"}")
+
     @RequestMapping(value = "updateMatter", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String updateMatters(@RequestBody Matter matter) {

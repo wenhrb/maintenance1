@@ -5,7 +5,6 @@ import com.casciences.maintenance.entity.WorkerInfo;
 import com.casciences.maintenance.service.base.WorkerInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import sun.jvm.hotspot.utilities.Assert;
 
 import javax.annotation.Resource;
 import java.util.List;

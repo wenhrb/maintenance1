@@ -2,6 +2,7 @@ package com.casciences.maintenance.service.base;
 
 import com.alibaba.fastjson.JSONArray;
 import com.casciences.maintenance.entity.Matter;
+import com.casciences.maintenance.entity.WorkerInfo;
 
 import java.util.List;
 
@@ -78,4 +79,5 @@ public interface MatterService {
      */
     List<Matter> queryMatterByTrigger(List<Integer> triggerIds);
 
+    List<Matter> queryMatterByCondition(Matter matter) throws Exception;
 }

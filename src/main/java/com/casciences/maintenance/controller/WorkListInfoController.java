@@ -10,12 +10,7 @@ import com.casciences.maintenance.enums.WorkerType;
 import com.casciences.maintenance.model.BackMessage;
 import com.casciences.maintenance.service.base.WorkListInfoService;
 import com.casciences.maintenance.service.base.WorkerInfoService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -124,6 +119,8 @@ public class WorkListInfoController {
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
+    
+
     @ResponseBody
     public String confirmWorkList(int work, List<Integer> confirmTaskIds, List<Integer> skipTaskIds) {
         try {

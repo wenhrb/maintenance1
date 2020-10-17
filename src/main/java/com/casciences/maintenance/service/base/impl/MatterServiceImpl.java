@@ -141,4 +141,9 @@ public class MatterServiceImpl implements MatterService {
     public List<Matter> queryMatterByTrigger(List<Integer> triggerIds) {
         return null;
     }
+
+    @Override
+    public List<Matter> queryMatterByCondition(Matter matter) throws Exception {
+        return matterDao.queryAll(matter);
+    }
 }

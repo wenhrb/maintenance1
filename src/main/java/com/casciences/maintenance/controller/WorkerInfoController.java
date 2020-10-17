@@ -139,12 +139,12 @@ public class WorkerInfoController {
 
 
     /**
-     * 分页查询员工信息
+     * 根据条件查询员工信息
      *
      * @param workerInfo 每页展示的条数
      * @return 单条数据
      */
-    @GetMapping("queryWorkers")
+    @RequestMapping(value = "queryWorkers", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
     @ApiOperation(value = "根据条件查询员工信息", notes = "传入对象")
     @ApiParam(name = "workerInfo", value = "{\"workerName\":\"test1\",\"workerType\":1,\"workerState\":1}", required = true)
@@ -152,7 +152,7 @@ public class WorkerInfoController {
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
-    public String queryMatters(@RequestBody WorkerInfo workerInfo) {
+    public String queryWorkers(@RequestBody WorkerInfo workerInfo) {
         try {
 
             List<WorkerInfo> workerInfos = workerInfoService.queryWorkersByCondition(workerInfo);
