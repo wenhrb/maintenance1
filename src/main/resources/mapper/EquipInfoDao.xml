@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casciences.maintenance.dao.EquipInfoDao">
+
+    <resultMap type="com.casciences.maintenance.entity.EquipInfo" id="EquipInfoMap">
+        <result property="equipId" column="equip_id" jdbcType="INTEGER"/>
+        <result property="equipName" column="equip_name" jdbcType="VARCHAR"/>
+        <result property="partName" column="part_name" jdbcType="VARCHAR"/>
+        <result property="partType" column="part_type" jdbcType="BOOLEAN"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="workerType" column="worker_type" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EquipInfoMap">
+        select
+          equip_id, equip_name, part_name, part_type, state, worker_type
+        from equip_info
+        where equip_id = #{equipId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="EquipInfoMap">
+        select
+          equip_id, equip_name, part_name, part_type, state,worker_type
+        from equip_info
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="EquipInfoMap">
+        select
+        equip_id, equip_name, part_name, part_type, state,worker_type
+        from equip_info
+        <where>
+            <if test="equipId != null">
+                and equip_id = #{equipId}
+            </if>
+            <if test="equipName != null and equipName != ''">
+                and equip_name = #{equipName}
+            </if>
+            <if test="partName != null and partName != ''">
+                and part_name = #{partName}
+            </if>
+            <if test="partType != null">
+                and part_type = #{partType}
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+            <if test="workerType != null and workerType != ''">
+                and worker_type = #{workerType}
+            </if>
+        </where>
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryEquipByName" resultMap="EquipInfoMap">
+        select
+        equip_id, equip_name, part_name, part_type, state, worker_type
+        from equip_info
+        <where>
+            <if test="equipName != null and equipName != ''">
+                and equip_name = #{equipName}
+            </if>
+            <if test="partType != null">
+                and part_type = 0
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryPartByName" resultMap="EquipInfoMap">
+        select
+        equip_id, equip_name, part_name, part_type, state, worker_type
+        from equip_info
+        <where>
+            <if test="partName != null and partName != ''">
+                and part_name = #{partName}
+            </if>
+            <if test="partType != null">
+                and part_type = 1
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="equipId" useGeneratedKeys="true">
+        insert into equip_info(equip_name, part_name, part_type, state, worker_type)
+        values (#{equipName}, #{partName}, #{partType}, #{state}, #{workerType})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update equip_info
+        <set>
+            <if test="equipName != null and equipName != ''">
+                equip_name = #{equipName},
+            </if>
+            <if test="partName != null and partName != ''">
+                part_name = #{partName},
+            </if>
+            <if test="partType != null">
+                part_type = #{partType},
+            </if>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+
+            <if test="workerType != null and workerType != ''">
+                worker_type = #{workerType},
+            </if>
+        </set>
+        where equip_id = #{equipId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from equip_info where equip_id = #{equipId}
+    </delete>
+
+</mapper>

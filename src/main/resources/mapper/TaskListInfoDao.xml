@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casciences.maintenance.dao.TaskListInfoDao">
+
+    <resultMap type="com.casciences.maintenance.entity.TaskListInfo" id="TaskListInfoMap">
+        <result property="taskId" column="task_id" jdbcType="INTEGER"/>
+        <result property="workId" column="work_id" jdbcType="INTEGER"/>
+        <result property="taskStatus" column="task_status" jdbcType="INTEGER"/>
+        <result property="matterId" column="matter_id" jdbcType="INTEGER"/>
+        <result property="workerInfoId" column="worker_info_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TaskListInfoMap">
+        select
+          task_id, work_id, task_status, matter_id, worker_info_id
+        from task_list_info
+        where task_id = #{taskId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TaskListInfoMap">
+        select
+          task_id, work_id, task_status, matter_id, worker_info_id
+        from task_list_info
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TaskListInfoMap">
+        select
+        task_id, work_id, task_status, matter_id, worker_info_id
+        from task_list_info
+        <where>
+            <if test="taskId != null">
+                and task_id = #{taskId}
+            </if>
+            <if test="workId != null">
+                and work_id = #{workId}
+            </if>
+            <if test="taskStatus != null">
+                and task_status = #{taskStatus}
+            </if>
+            <if test="matterId != null">
+                and matter_id = #{matterId}
+            </if>
+            <if test="workerInfoId != null">
+                and worker_info_id = #{workerInfoId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="taskId" useGeneratedKeys="true">
+        insert into task_list_info(work_id, task_status, matter_id, worker_info_id)
+        values (#{workId}, #{taskStatus}, #{matterId}, #{workerInfoId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update task_list_info
+        <set>
+            <if test="workId != null">
+                work_id = #{workId},
+            </if>
+            <if test="taskStatus != null">
+                task_status = #{taskStatus},
+            </if>
+            <if test="matterId != null">
+                matter_id = #{matterId},
+            </if>
+            <if test="workerInfoId != null">
+                worker_info_id = #{workerInfoId},
+            </if>
+        </set>
+        where task_id = #{taskId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from task_list_info where task_id = #{taskId}
+    </delete>
+
+    <!--新增多个任务-->
+    <insert id="addTaskListInfos" parameterType="java.util.List">
+        insert into task_list_info(work_id, task_status, matter_id)
+        values
+        <foreach item="taskInfo" index="index" collection="taskListInfos" separator=",">
+            (#{taskInfo.workId}, #{taskInfo.taskStatus}, #{taskInfo.matterId})
+        </foreach>
+    </insert>
+
+
+
+    <!--查询单个-->
+    <select id="queryByWorkId" resultMap="TaskListInfoMap">
+        select
+          task_id, work_id, task_status, matter_id, worker_info_id
+        from task_list_info
+        where work_id = #{workId}
+    </select>
+
+
+    <update id="batchUpdateState" parameterType="list">
+        update task_list_info
+        <set>
+            <if test="taskStatus != null">
+                task_status = #{taskStatus},
+            </if>
+        </set>
+        where task_id in
+        <foreach item="taskInfo" index="index" collection="taskListIds"
+                                   open="(" separator="," close=")">
+        #{taskInfo}
+    </foreach>
+    </update>
+
+
+</mapper>

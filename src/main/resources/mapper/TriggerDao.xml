@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casciences.maintenance.dao.TriggerDao">
+
+    <resultMap type="com.casciences.maintenance.entity.Trigger" id="TriggerMap">
+        <result property="triggerId" column="trigger_id" jdbcType="INTEGER"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="timeSpan" column="time_span" jdbcType="INTEGER"/>
+        <result property="timePoint" column="time_point" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TriggerMap">
+        select
+          trigger_id, description, type, time_span, time_point
+        from `trigger`
+        where trigger_id = #{triggerId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TriggerMap">
+        select
+          trigger_id, description, type, time_span, time_point
+        from `trigger`
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TriggerMap">
+        select
+        trigger_id, description, type, time_span, time_point
+        from `trigger`
+        <where>
+            <if test="triggerId != null">
+                and trigger_id = #{triggerId}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="timeSpan != null">
+                and time_span = #{timeSpan}
+            </if>
+            <if test="timePoint != null">
+                and time_point = #{timePoint}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="triggerId" useGeneratedKeys="true">
+        insert into `trigger`(description, type, time_span, time_point)
+        values (#{description}, #{type}, #{timeSpan}, #{timePoint})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update `trigger`
+        <set>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="timeSpan != null">
+                time_span = #{timeSpan},
+            </if>
+            <if test="timePoint != null">
+                time_point = #{timePoint},
+            </if>
+        </set>
+        where trigger_id = #{triggerId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from `trigger` where trigger_id = #{triggerId}
+    </delete>
+
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryTimeTriggerByType" resultMap="TriggerMap">
+        select trigger_id, description, type, time_span, time_point from `trigger`
+        <where>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.casciences.maintenance.dao.EquipWorkInfoDao">
+
+    <resultMap type="com.casciences.maintenance.entity.EquipWorkInfo" id="EquipWorkInfoMap">
+        <result property="equipWorkId" column="equip_work_id" jdbcType="INTEGER"/>
+        <result property="equipStartTime" column="equip_start_time" jdbcType="TIMESTAMP"/>
+        <result property="equipLastShutdownTime" column="equip_last_shutdown_time" jdbcType="VARCHAR"/>
+        <result property="equipWorkHours" column="equip_work_hours" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EquipWorkInfoMap">
+        select
+          equip_work_id, equip_start_time, equip_last_shutdown_time, equip_work_hours
+        from equip_work_info
+        where equip_work_id = #{equipWorkId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="EquipWorkInfoMap">
+        select
+          equip_work_id, equip_start_time, equip_last_shutdown_time, equip_work_hours
+        from equip_work_info
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="EquipWorkInfoMap">
+        select
+        equip_work_id, equip_start_time, equip_last_shutdown_time, equip_work_hours
+        from equip_work_info
+        <where>
+            <if test="equipWorkId != null">
+                and equip_work_id = #{equipWorkId}
+            </if>
+            <if test="equipStartTime != null">
+                and equip_start_time = #{equipStartTime}
+            </if>
+            <if test="equipLastShutdownTime != null and equipLastShutdownTime != ''">
+                and equip_last_shutdown_time = #{equipLastShutdownTime}
+            </if>
+            <if test="equipWorkHours != null">
+                and equip_work_hours = #{equipWorkHours}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="equipWorkId" useGeneratedKeys="true">
+        insert into equip_work_info(equip_start_time, equip_last_shutdown_time, equip_work_hours)
+        values (#{equipStartTime}, #{equipLastShutdownTime}, #{equipWorkHours})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update equip_work_info
+        <set>
+            <if test="equipStartTime != null">
+                equip_start_time = #{equipStartTime},
+            </if>
+            <if test="equipLastShutdownTime != null and equipLastShutdownTime != ''">
+                equip_last_shutdown_time = #{equipLastShutdownTime},
+            </if>
+            <if test="equipWorkHours != null">
+                equip_work_hours = #{equipWorkHours},
+            </if>
+        </set>
+        where equip_work_id = #{equipWorkId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from equip_work_info where equip_work_id = #{equipWorkId}
+    </delete>
+
+</mapper>
