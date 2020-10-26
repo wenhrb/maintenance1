@@ -90,11 +90,11 @@ public class TaskListInfoServiceImpl implements TaskListInfoService {
 
     /**
      * @param taskListIds
-     * @param state
+     * @param taskListInfo
      * @return
      */
     @Override
-    public void batchUpdateState(List<Integer> taskListIds, int state) {
-        taskListInfoDao.batchUpdateState(taskListIds, state);
+    public void batchUpdateTaskList(List<Integer> taskListIds, TaskListInfo taskListInfo) {
+        taskListInfoDao.batchUpdateState(taskListIds, taskListInfo);
     }
 }

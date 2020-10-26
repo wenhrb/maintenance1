@@ -50,7 +50,7 @@ public class WorkListInfoController {
     @GetMapping("getUserWorkList")
     @ApiOperation(value = "获取员工的工单列表", notes = "获取员工的工单列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int")})
+            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int", example = "0")})
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
@@ -62,7 +62,13 @@ public class WorkListInfoController {
             if (workerInfo == null) {
                 return BackMessage.errorMessage("工人不存在,请确认工人Id" + workerId);
             }
-            List<WorkListInfo> workListInfoList = workListInfoService.queryByUserAndState(workerId, WorkStateEnum.getWorkAllowStates());
+            List<WorkListInfo> workListInfoList;
+            if (workerInfo.getWorkerType() == WorkerType.ADMIN.getValue() || workerInfo.getWorkerType() == WorkerType.CON_ADMIN.getValue()) {
+                workListInfoList = workListInfoService.queryByUserAndState(null, WorkStateEnum.getWorkAllowStates());
+            } else {
+                workListInfoList = workListInfoService.queryByUserAndState(workerId, WorkStateEnum.getWorkAllowStates());
+            }
+
             return BackMessage.successMessage(JSON.toJSON(workListInfoList));
         } catch (Exception e) {
             log.error("获取工单列表失败,e:{}", e);
@@ -82,8 +88,8 @@ public class WorkListInfoController {
     @GetMapping("appointWorker")
     @ApiOperation(value = "工单指派给特定工人", notes = "工单指派给特定工人")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "工单Id", name = "workListId", dataType = "int"),
-            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int")})
+            @ApiImplicitParam(value = "工单Id", name = "workListId", dataType = "int", example = "0"),
+            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int", example = "0")})
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
@@ -119,7 +125,7 @@ public class WorkListInfoController {
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
-    
+
 
     @ResponseBody
     public String confirmWorkList(int work, List<Integer> confirmTaskIds, List<Integer> skipTaskIds) {
@@ -137,7 +143,7 @@ public class WorkListInfoController {
     @ApiOperation(value = "工单评分", notes = "工单评分")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "工单Id", name = "workListId", dataType = "list", paramType = "query"),
-            @ApiImplicitParam(value = "评分", name = "quality", dataType = "int", paramType = "query")})
+            @ApiImplicitParam(value = "评分", name = "quality", dataType = "int", paramType = "query", example = "0")})
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),

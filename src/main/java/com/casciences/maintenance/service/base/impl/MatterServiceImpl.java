@@ -214,7 +214,7 @@ public class MatterServiceImpl implements MatterService {
 
     @Override
     public List<Matter> queryMatterByTrigger(List<Integer> triggerIds) {
-        return null;
+        return matterDao.queryMatterByTrigger(triggerIds);
     }
 
     @Override

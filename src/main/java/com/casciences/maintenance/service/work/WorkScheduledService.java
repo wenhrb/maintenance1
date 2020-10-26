@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @EnableScheduling
-
 public class WorkScheduledService {
 
     @Resource
@@ -35,21 +34,21 @@ public class WorkScheduledService {
     /**
      * 每小时执行一次
      */
-    @Scheduled(cron = "0 0 0/1 * * ? ")
+    @Scheduled(cron = "0 0/1 * * * ? ")
     private void startEvent() {
-        System.out.println("开始检查");
+        log.info("开始自动检查");
         List<Matter> matterList = workExecuteService.findNeedExecuteMatters();
         if (CollectionUtils.isEmpty(matterList)) {
             log.info("没有发现需要执行的任务");
             return;
         }
         try {
-            Map<Integer,List<Matter>> integerListMap = matterList.stream().collect(Collectors.groupingBy(Matter::getMatterTriggerId));
-            for(Map.Entry<Integer,List<Matter>> item:integerListMap.entrySet()){
-               workListInfoService.createWorkInfo(
-                       item.getValue());
+            Map<Integer, List<Matter>> integerListMap = matterList.stream().collect(Collectors.groupingBy(Matter::getMatterTriggerId));
+            for (Map.Entry<Integer, List<Matter>> item : integerListMap.entrySet()) {
+                workListInfoService.createWorkInfo(item.getValue());
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("自动生成工单失败，需要执行的任务有{}", matterList.size());
         }
     }

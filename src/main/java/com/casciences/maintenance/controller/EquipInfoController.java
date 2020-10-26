@@ -86,7 +86,7 @@ public class EquipInfoController {
     })
     @GetMapping("queryPartInfoByEquipId")
     @ResponseBody
-    public String queryPartInfoByEquipId(@ApiParam(value = "equipId") @RequestParam int equipId) {
+    public String queryPartInfoByEquipId(@ApiParam(value = "equipId" ,example = "0") @RequestParam int equipId) {
         try {
             List<EquipInfo> equipInfoList = equipInfoService.queryPartInfoByEquipId(equipId);
             return BackMessage.successMessage(equipInfoList);
@@ -104,12 +104,13 @@ public class EquipInfoController {
      */
     @ApiOperation(value = "新增一个装备", notes = "新增一个装备")
     @ApiImplicitParam(value = "装备信息", name = "equipInfo", dataType = "EquipInfo<<ArrayList>>", paramType = "body",
-            example = "{\"equipId\":\"1\",\"equipName\":\"test1\",\"partName\":\"test1_1\",\"partType\":1,\"state\":\"影响施工安全\",\"workerType\":1}")
+            example = "{\"equipId\":1,\"equipName\":\"test1\",\"partName\":\"test1_1\",\"partType\":1,\"state\":\"影响施工安全\",\"workerType\":1}")
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),
     })
     @ResponseBody
+
     @RequestMapping(value = "add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String addEquip(@RequestBody EquipInfo equipInfo) {
         try {
@@ -123,7 +124,7 @@ public class EquipInfoController {
 
     @ApiOperation(value = "删除一个装备", notes = "删除一个装备")
     @ApiImplicitParam(value = "装备信息", name = "equipInfo", dataType = "EquipInfo<<ArrayList>>", paramType = "body",
-            example = "{\"equipId\":\"1\",\"equipName\":\"test1\",\"partName\":\"test1_1\",\"partType\":1,\"state\":\"影响施工安全\",\"workerType\":1}")
+            example = "{\"equipId\":1,\"equipName\":\"test1\",\"partName\":\"test1_1\",\"partType\":1,\"state\":\"影响施工安全\",\"workerType\":1}")
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),

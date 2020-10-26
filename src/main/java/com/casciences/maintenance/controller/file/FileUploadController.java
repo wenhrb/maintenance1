@@ -59,7 +59,7 @@ public class FileUploadController {
     @ResponseBody
     public String changeFile(@ApiParam(value = "说明上传文档的type") @RequestParam String fileType,
                              @ApiParam(value = "要上传的文件") @RequestParam MultipartFile file,
-                             @ApiParam(value = "第几行开始是数据,默认为1") @RequestParam(required = false, defaultValue = "1") int rowNum) {
+                             @ApiParam(value = "第几行开始是数据,默认为1",example = "1") @RequestParam(required = false, defaultValue = "1") int rowNum) {
         Objects.requireNonNull(Strings.isNullOrEmpty(fileType) ? null : fileType, "文件类型不能为空");
         Objects.requireNonNull(file, "excel文件不能为空");
         rowNum = rowNum > 1 ? rowNum : 1;
@@ -69,7 +69,7 @@ public class FileUploadController {
             JSONArray data = excelUploadService.parseFileToJsonArray(workbook, excelFile, rowNum);
             matterService.saveDataToDd(data);
             return BckMes.successMes(data);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return BckMes.errorMes(e.toString());
         }
     }

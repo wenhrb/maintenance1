@@ -1,5 +1,7 @@
 package com.casciences.maintenance.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +19,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@ApiModel
 public class EquipInfo implements Serializable {
     private static final long serialVersionUID = -31370450496140860L;
     /**
      * 装备Id
      */
+    @ApiModelProperty(example = "0")
     private Integer equipId;
     /**
      * 装备名称
@@ -43,6 +47,7 @@ public class EquipInfo implements Serializable {
     /**
      * @see com.casciences.maintenance.enums.WorkerType
      */
+    @ApiModelProperty(example = "11")
     private Integer workerType;
 
 

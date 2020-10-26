@@ -80,7 +80,7 @@ public interface TaskListInfoDao {
      * 批量更新任务项
      *
      * @param taskListIds
-     * @param state
+     * @param taskListInfo
      */
-    void batchUpdateState(List<Integer> taskListIds, int state);
+    void batchUpdateState(List<Integer> taskListIds, TaskListInfo taskListInfo);
 }

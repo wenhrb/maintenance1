@@ -52,8 +52,8 @@ public class WorkerInfoController {
     @GetMapping("upState")
     @ApiOperation(value = "修改员工状态", notes = "修改员工状态")
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int"),
-            @ApiImplicitParam(value = "员工状态（0，1，2）", name = "state", dataType = "int")})
+            @ApiImplicitParam(value = "员工Id", name = "workerId", dataType = "int",example = "0"),
+            @ApiImplicitParam(value = "员工状态（0，1，2）", name = "state", dataType = "int",example = "0")})
     @ApiResponses({
             @ApiResponse(code = -1, message = "失败", responseContainer = "message"),
             @ApiResponse(code = 1, message = "成功", responseContainer = "message,data"),

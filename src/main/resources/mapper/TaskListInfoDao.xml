@@ -60,9 +60,6 @@
     <update id="update">
         update task_list_info
         <set>
-            <if test="workId != null">
-                work_id = #{workId},
-            </if>
             <if test="taskStatus != null">
                 task_status = #{taskStatus},
             </if>
@@ -104,9 +101,20 @@
     <update id="batchUpdateState" parameterType="list">
         update task_list_info
         <set>
-            <if test="taskStatus != null">
-                task_status = #{taskStatus},
-            </if>
+            <set>
+                <if test="workId != null">
+                    work_id = #{workId},
+                </if>
+                <if test="taskStatus != null">
+                    task_status = #{taskStatus},
+                </if>
+                <if test="matterId != null">
+                    matter_id = #{matterId},
+                </if>
+                <if test="workerInfoId != null">
+                    worker_info_id = #{workerInfoId},
+                </if>
+            </set>
         </set>
         where task_id in
         <foreach item="taskInfo" index="index" collection="taskListIds"

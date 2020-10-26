@@ -105,7 +105,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryMatterByTrigger" resultMap="MatterMap" parameterType="java.util.List">
         select
-        matter_id, equip_id, part_id, pre_op, execu_standard, maint_op, matter_trigger_id, workerType
+        matter_id, equip_id, part_id, pre_op, execu_standard, maint_op, matter_trigger_id, worker_type
         from matter
         <where>
             <if test="triggerIds != null">
